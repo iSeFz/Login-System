@@ -1,5 +1,3 @@
-// functions.h content
-
 #ifndef FUNCTIONS_H
 #define FUNCTIONS_H
 
@@ -16,5 +14,17 @@ void start();
 
 // Copy data from file into a vector
 void copyData(vector<string>&);
+
+// Check for the correct format of the user's name
+string& nameCheck(string&);
+
+// Check for the correct format of the user's email
+string& emailCheck(string&);
+
+// Check for the correct format of phone number
+string& phoneCheck(string&);
+
+// Register new profile to the system
+void registration();
 
 #endif
