@@ -6,12 +6,12 @@ Author2 and ID: Mohamed Amgad - 20210330
 Author3 and ID: Omar Elgammal - 20210271
 Program Name: Login Application
 Last Modification Date: 15 May 2022
-Version: 1.8
+Version: 2.0
 */
 
 #include "loginapplib.cpp"
 
 int main(){
-    cout << "Welcome to the Login Application program!\n";
+    cout << "---------- Welcome to the Login Application program! ----------\n";
     start();
 }
