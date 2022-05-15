@@ -31,7 +31,7 @@ void start(){
             login();
         }
         else if(choice == "3"){
-            ; // some function
+            changePass();
         }
         else if(choice == "4"){
             break;
@@ -340,4 +340,32 @@ void login(){
     else
         start();
     cout << "-------------------------------------------\n";
+}
+
+// Change password of an existing account
+void changePass(){
+    int index, count;
+    string oldPass, newPass, tempPass;
+    copyData(DATA);
+    index = isRegName();
+    oldPass = DATA[index - 1];
+    cout << "Enter your old password: ";
+    hidePass(tempPass);
+    count = 3;
+    while (tempPass != oldPass && count != 0){
+        cerr << "########## INVALID PASSWORD ##########\n"
+                "You have " << count-- << " remaining attemps!\n";
+        cout << "Enter your password AGAIN: ";
+        tempPass = "";
+        hidePass(tempPass);
+    }
+    if(tempPass == oldPass){
+        passwordCheck(newPass);
+        DATA[index - 1] = newPass;
+        ofstream file(DB);
+        file << DATA;
+        file.close();
+    }
+    else
+        cerr << "########## Changing password FAILED! Try Again Later ##########\n";
 }
