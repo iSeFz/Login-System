@@ -7,6 +7,8 @@
 #include <fstream>
 #include <regex>
 #include <vector>
+#include <map>
+#include <conio.h>
 
 using namespace std;
 
@@ -172,6 +174,66 @@ string& phoneCheck(string& phone){
     }
 }
 
+// Check for the correct format of the user's password
+string& passwordCheck(string& password){
+    // Get the password to check for the correct format
+    while(true){
+        cout << "Enter your password: ";
+        hidePass(password);
+        // Check for the regular expression of standard password
+        regex validpassword("^(?=.+[0-9])(?=.+[a-zA-Z])(?=.+[!@#$&*]).{8,16}$");
+        if(!regex_match(password, validpassword)){
+            cerr << "########## INVALID password format ##########\n";
+            cout << "Password must be: At least 8 characters,"
+                    " mixture of upper and lowercase letters\n"
+                    "At least one number and one special character!\n";
+            password = "";
+            continue;
+        }
+        else{
+            string password2;
+            cout << "Enter password again: ";
+            hidePass(password2);
+            if(password == password2)
+                return password;
+            else{
+                cerr << "########## Passwords does NOT match! ##########\n";
+                password = "";
+            }
+        }
+    }
+}
+
+// Encrypt password before storing it
+string passEncryption(string& pass, int choice){
+    string temp = pass;
+    int x;
+    pass = "";
+    for (auto ch : temp){
+        if (isalpha(ch)){
+            if (choice == 1)
+                x = (5 * lettersMap.at(toupper(ch)) + 8) % 26;
+            else
+                x = 21 * (lettersMap.at(toupper(ch)) - 8) % 26;
+            for (auto el : lettersMap){
+                if (el.second == x){
+                    if (isupper(ch)){
+                        pass += el.first;
+                        break;
+                    }
+                    else{
+                        pass += (char)tolower(el.first);
+                        break;
+                    }
+                }
+            }
+        }
+        else
+            pass += ch;
+    }
+    return pass;
+}
+
 // Register new profile to the system
 void registration(){
     cout << "---------- Register new user ----------\n";
@@ -180,6 +242,7 @@ void registration(){
     nameCheck(name);
     emailCheck(email);
     phoneCheck(phone);
+    passwordCheck(pass);
     UserData user(pass, name, email, phone);
     cout << "Welcome " << user.userName << "! You've registered successfully!\n";
     // Store the newly registered user data to the profiles system
@@ -187,4 +250,24 @@ void registration(){
     dataBase << user;
     dataBase.close();
     cout << "---------------------------------------\n";
+}
+
+
+// Hide password while the user is entering
+string hidePass(string& pass){
+    char ch;
+    ch = getch();
+    while(ch != 13){
+        if(ch == 8 && pass.size()){
+            cout << "\b \b";
+            pass.pop_back();
+            ch = getch();
+            continue;
+        }
+        cout << '*';
+        pass += ch;
+        ch = getch();
+    }
+    cout << endl;
+    return passEncryption(pass, 1);
 }
