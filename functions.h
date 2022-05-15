@@ -54,4 +54,7 @@ string hidePass(string&);
 // Login to an existing account
 void login();
 
+// Change password of an existing account
+void changePass();
+
 #endif
