@@ -28,7 +28,7 @@ void start(){
             registration();
         }
         else if(choice == "2"){
-            ; // some function
+            login();
         }
         else if(choice == "3"){
             ; // some function
@@ -252,6 +252,61 @@ void registration(){
     cout << "---------------------------------------\n";
 }
 
+// Check for registered username before or not
+int isRegName(){
+    string name, ans;
+    cout << "Enter your username/ID: ";
+    cin.clear();
+    getline(cin, name);
+	for(int i = 0; i < DATA.size(); i += 4){
+    	if(name == DATA[i])
+      		return i;
+    }
+  	cerr << "Username NOT found! Maybe you're NOT registered yet!\n";
+    while(true){
+        cout << "Would you like to register a profile (y/n)? ";
+        cin.clear();
+        getline(cin, ans);
+        if(ans == "y"){
+            registration();
+            return 0;
+        }
+        else if(ans == "n")
+            return 0;
+        else{
+            cerr << "###### Enter ONLY y or n ######\n";
+            continue;
+        }
+    }
+}
+
+// Check for password registered before or not
+bool isRegPass(int nameIndex){
+    string pass;
+    cout << "Enter your password: ";
+    hidePass(pass);
+    for(int i = 1; i < DATA.size(); i += 4){
+    	if(pass == DATA[i]){
+      		cout << "Successfull Login! Welcome back " << DATA[nameIndex] << "!\n";
+            return true;
+    	}
+    }
+    int count = 3;
+    while(count != 0){
+        cerr << "########## INVALID PASSWORD ##########\n"
+                "You have " << count-- << " remaining attemps!\n";
+        cout << "Enter your password AGAIN: ";
+        pass = "";
+        hidePass(pass);
+        for(int i = 1; i < DATA.size(); i += 4){
+            if(pass == DATA[i]){
+                cout << "Successfull Login! Welcome back " << DATA[nameIndex] << "!\n";
+                return true;
+            }
+        }
+    }
+    return true;
+}
 
 // Hide password while the user is entering
 string hidePass(string& pass){
@@ -270,4 +325,19 @@ string hidePass(string& pass){
     }
     cout << endl;
     return passEncryption(pass, 1);
+}
+
+// Login an existing account
+void login(){
+  	cout << "---------- Login to your account ----------\n";
+    int nameIndex;
+    // string name;
+    copyData(DATA);
+    nameIndex = isRegName();
+    if(nameIndex)
+        // cout << "Enter your password: ";
+        isRegPass(nameIndex);
+    else
+        start();
+    cout << "-------------------------------------------\n";
 }
