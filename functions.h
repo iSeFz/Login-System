@@ -42,7 +42,16 @@ string passEncryption(string&, int);
 // Register new profile to the system
 void registration();
 
+// Check for registered username before or not
+int isRegName();
+
+// Check for password registered before or not
+bool isRegPass();
+
 // Hide password while the user is entering
 string hidePass(string&);
+
+// Login to an existing account
+void login();
 
 #endif
