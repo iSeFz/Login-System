@@ -6,7 +6,7 @@ Author2 and ID: Mohamed Amgad - 20210330
 Author3 and ID: Omar Elgammal - 20210271
 Program Name: Login Application
 Last Modification Date: 15 May 2022
-Version: 1.5
+Version: 1.8
 */
 
 #include "loginapplib.cpp"
