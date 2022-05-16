@@ -28,7 +28,12 @@ void start(){
             registration();
         }
         else if(choice == "2"){
-            login();
+            if(badUser != 'd')
+          		login();
+          	else{
+                cout << "########## FAILED Login! You are DENIED from accessing the system! ##########\n";
+          		break;
+            }
         }
         else if(choice == "3"){
             changePass();
@@ -41,6 +46,8 @@ void start(){
             cout << "Enter ONLY numbers from 1 to 4.\n";
             continue;
         }
+      	DATA.clear();
+      	copyData(DATA);
     }
     cout << "Thank You for using the Login Application!\n";
 }
@@ -74,21 +81,20 @@ ostream& operator << (ostream& out, UserData user){
 
 // Overload the fstream operator to write all user data into files
 ofstream& operator << (ofstream& app, UserData user){
-    app << user.userName << '~' << user.userPass << '~';
+    app << user.userPass << '~' << user.userName << '~';
     app << user.userPhone << '~' << user.userEmail << '~' << endl;
     return app;
 }
 
 // Overload the fstream operator to upadate files with current vector data
 ofstream& operator << (ofstream& out, vector<string> data){
-    for(int i = 0, k = 1; i < data.size(); i++, k++){
+    for(int i = 0, k = 1; i < data.size() - 1; i++, k++){
         if(k == 4){
             k = 0;
-            out << data[i] << "~\n";
+            out << data[i] + "~\n";
         }
-        else{
-            out << data[i] << '~';
-        }
+        else
+            out << data[i] + '~';
     }
     return out;
 }
@@ -106,13 +112,14 @@ void copyData(vector <string>& vector){
 
 // Check for the correct format of the user's name
 string& nameCheck(string& name){
+  	copyData(DATA);
     // Get the name to check for the correct format
     while(true){
         cout << "Enter username: ";
         cin.clear();
         getline(cin, name);
         // Check for the regular expression of names
-        regex validName("^[a-zA-Z-_.]+{4,}$");
+        regex validName("^[\\w-.]+{4,}$");
         if(!regex_match(name, validName)){
             cerr << "########## INVALID username format ##########\n";
             cout << "Username must be: At least 4 characters.\n"
@@ -121,6 +128,13 @@ string& nameCheck(string& name){
             continue;
         }
         else{
+          	for(int i = 1; i < DATA.size(); i += 4){
+                if(name == DATA[i]){
+                    cerr << "########## Username is already registered! ##########\n";
+                    cout << "Please use ANOTHER username!\n";
+                    return nameCheck(name);
+                }
+            }
             return name;
         }
     }
@@ -143,8 +157,8 @@ string& emailCheck(string& email){
         else{
             for(int i = 3; i < DATA.size(); i += 4){
                 if(email == DATA[i]){
-                    cerr << "########## This email is already registered! ##########\n";
-                    cout << "Please use another email.\n";
+                    cerr << "########## Email is already registered! ##########\n";
+                    cout << "Please use ANOTHER email!\n";
                     return emailCheck(email);
                 }
             }
@@ -155,6 +169,7 @@ string& emailCheck(string& email){
 
 // Check for the correct format of phone number
 string& phoneCheck(string& phone){
+  	copyData(DATA);
     // Get the phone number to check for the correct format
     while(true){
         cout << "Enter phone number: ";
@@ -169,6 +184,13 @@ string& phoneCheck(string& phone){
             continue;
         }
         else{
+          	for(int i = 2; i < DATA.size(); i += 4){
+                if(phone == DATA[i]){
+                    cerr << "########## Phone is already registered! ##########\n";
+                    cout << "Please use ANOTHER phone!\n";
+                    return phoneCheck(phone);
+                }
+            }
             return phone;
         }
     }
@@ -229,7 +251,7 @@ string passEncryption(string& pass, int choice){
             }
         }
         else
-            pass += ch;
+          	pass += ch;  
     }
     return pass;
 }
@@ -244,7 +266,7 @@ void registration(){
     phoneCheck(phone);
     passwordCheck(pass);
     UserData user(pass, name, email, phone);
-    cout << "Welcome " << user.userName << "! You've registered successfully!\n";
+    cout << "$$$$$$$$$$ Welcome " << user.userName << "! You've registered successfully! $$$$$$$$$$\n";
     // Store the newly registered user data to the profiles system
     ofstream dataBase(DB, ios::app);
     dataBase << user;
@@ -258,11 +280,11 @@ int isRegName(){
     cout << "Enter your username/ID: ";
     cin.clear();
     getline(cin, name);
-	for(int i = 0; i < DATA.size(); i += 4){
+		for(int i = 1; i < DATA.size(); i += 4){
     	if(name == DATA[i])
       		return i;
     }
-  	cerr << "Username NOT found! Maybe you're NOT registered yet!\n";
+  	cerr << "########## Username NOT found! Maybe you're NOT registered yet! ##########\n";
     while(true){
         cout << "Would you like to register a profile (y/n)? ";
         cin.clear();
@@ -283,11 +305,10 @@ int isRegName(){
 // Check for password registered before or not
 bool isRegPass(int nameIndex){
     string pass;
-    cout << "Enter your password: ";
     hidePass(pass);
-    for(int i = 1; i < DATA.size(); i += 4){
+    for(int i = 0; i < DATA.size(); i += 4){
     	if(pass == DATA[i]){
-      		cout << "Successfull Login! Welcome back " << DATA[nameIndex] << "!\n";
+      		cout << "$$$$$$$$$$ Successfull Login! Welcome back " << DATA[nameIndex] << "! $$$$$$$$$$\n";
             return true;
     	}
     }
@@ -300,11 +321,13 @@ bool isRegPass(int nameIndex){
         hidePass(pass);
         for(int i = 1; i < DATA.size(); i += 4){
             if(pass == DATA[i]){
-                cout << "Successfull Login! Welcome back " << DATA[nameIndex] << "!\n";
+                cout << "$$$$$$$$$$ Successfull Login! Welcome back " << DATA[nameIndex] << "! $$$$$$$$$$\n";
                 return true;
             }
         }
     }
+  	cout << "########## FAILED Login! You are DENIED from accessing the system! ##########\n";
+  	badUser = 'd';
     return true;
 }
 
@@ -331,12 +354,13 @@ string hidePass(string& pass){
 void login(){
   	cout << "---------- Login to your account ----------\n";
     int nameIndex;
-    // string name;
+  	DATA.clear();
     copyData(DATA);
     nameIndex = isRegName();
-    if(nameIndex)
-        // cout << "Enter your password: ";
+    if(nameIndex){
+      	cout << "Enter your password: ";
         isRegPass(nameIndex);
+    }
     else
         start();
     cout << "-------------------------------------------\n";
@@ -344,18 +368,20 @@ void login(){
 
 // Change password of an existing account
 void changePass(){
+    cout << "---------- Change Password ----------\n";
     int index, count;
     string oldPass, newPass, tempPass;
+  	DATA.clear();
     copyData(DATA);
     index = isRegName();
     oldPass = DATA[index - 1];
-    cout << "Enter your old password: ";
+    cout << "Enter your OLD password: ";
     hidePass(tempPass);
     count = 3;
     while (tempPass != oldPass && count != 0){
         cerr << "########## INVALID PASSWORD ##########\n"
                 "You have " << count-- << " remaining attemps!\n";
-        cout << "Enter your password AGAIN: ";
+        cout << "Enter new password AGAIN: ";
         tempPass = "";
         hidePass(tempPass);
     }
@@ -365,7 +391,9 @@ void changePass(){
         ofstream file(DB);
         file << DATA;
         file.close();
+      	cout << "$$$$$$$$$$ Password CHANGED successfully! $$$$$$$$$$\n";
     }
     else
         cerr << "########## Changing password FAILED! Try Again Later ##########\n";
+    cout << "-------------------------------------\n";
 }
