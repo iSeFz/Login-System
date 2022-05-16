@@ -5,8 +5,8 @@ Author1 and ID: Seif Yahia - 20210172
 Author2 and ID: Mohamed Amgad - 20210330
 Author3 and ID: Omar Elgammal - 20210271
 Program Name: Login Application
-Last Modification Date: 15 May 2022
-Version: 3.0
+Last Modification Date: 16 May 2022
+Version: 3.5
 */
 
 #include "loginapplib.cpp"
