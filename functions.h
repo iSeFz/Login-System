@@ -9,6 +9,9 @@ vector <string> DATA;
 // Declare database text file
 char DB[] = "database.txt";
 
+// Character for checking for denied users
+char badUser;
+
 // Declare map of characters
 map <char, int> lettersMap{
     {'A',0},{'B',1},{'C',2},{'D',3},{'E',4},
