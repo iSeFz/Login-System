@@ -49,7 +49,7 @@ void registration();
 int isRegName();
 
 // Check for password registered before or not
-bool isRegPass();
+bool isRegPass(int);
 
 // Hide password while the user is entering
 string hidePass(string&);
